@@ -5,29 +5,136 @@ const phone = document.getElementById("phone");
 const website = document.getElementById("website");
 const mapId = document.getElementById("map");
 const form = document.getElementById("form");
+let isFormValid = true;
+let mydata = {
+  name: "",
+  address: "",
+  email: "",
+  phone: "",
+  website: ""
+}
 
-function validateForm(e) {
+function submitForm(e) {
     e.preventDefault();
 
-    const error = document.querySelector('.error');
-    errorMessage = {};
+    validateName(name);
+    validatePhone(phone);
+    validateEmail(email);
+    validateWebsite(website);
+    validateAddress(address);
+    saveDataInLocalStorage();
    
-    error.innerHTML = "Something is wrong";
-    console.log(e);
 } 
 
-form.addEventListener('submit', validateForm);
+function saveDataInLocalStorage() {
+        if(isFormValid) {
+          localStorage.setItem('data', JSON.stringify(mydata));
+        }
+}
 
+function validateName(name) {
+  const regexName = /^[a-zA-Z]{2,30}$/;
 
-let map;
+  if(!regexName.test(name.value)) {
+    isFormValid = false;
+    document.querySelector('.error-name').innerHTML = "You have entered an invalid name";
+  } else {
+    document.querySelector('.error-name').innerHTML = "";
+    mydata.name = name.value;
+  }
+}
+
+function validateWebsite(url) {
+   const regexWebsite = /^((https?|ftp|smtp):\/\/)?(www.)?[a-z0-9]+\.[a-z]+(\/[a-zA-Z0-9#]+\/?)*$/;
+ 
+   if(!regexWebsite.test(url.value)) {
+    isFormValid = false;
+    document.querySelector('.error-website').innerHTML = "You have entered an invalid website url";
+   } else {
+    document.querySelector('.error-website').innerHTML = "";
+    mydata.website = url.value;
+  }
+}
+
+function validatePhone(phone) {
+  const regexPhone = /^[\d\.\-]+$/;
+
+  if(!regexPhone.test(phone.value) || phone.value == "") {
+    isFormValid = false;
+    document.querySelector('.error-phone').innerHTML = "You have entered an invalid phone number";
+  } else {
+    document.querySelector('.error-phone').innerHTML = "";
+    mydata.phone = phone.value;
+  }
+}
+
+function validateEmail(email) {
+  const regexEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if(!regexEmail.test(email.value)) {
+    isFormValid = false;
+    document.querySelector('.error-email').innerHTML = "You have entered an invalid email";
+  } else {
+    var retrievedObject = localStorage.getItem('data')
+    var storedEmail = JSON.parse(retrievedObject).email;
+    if(storedEmail === email) {
+        isFormValid = false;
+        document.querySelector('.submit-message').innerHTML = "Email already submitted";
+    } else {
+      document.querySelector('.error-email').innerHTML = "";
+      mydata.email = email.value;
+    }
+  }
+}
+
+ function validateAddress(address) {
+   const regexAddress= /[A-Za-z0-9'\.\-\s\,]/;
+   
+   if(address.value == "") {
+    isFormValid = false;
+    document.querySelector('.error-address').innerHTML = "You have entered an invalid address";
+   } else {
+     mydata.address = address.value;
+   }
+}
+
+form.addEventListener('submit', submitForm);
+
+//////////////////////////////////////////////////////////
 
 function initMap() {
-    map = new google.maps.Map(mapId, {
-      center: { lat: -34.397, lng: 150.644 },
-      zoom: 8,
-    });
-    console.log(map)
-  }
+  const mapDiv = document.getElementById("map");
+  const map = new google.maps.Map(mapDiv, {
+    zoom: 8,
+    center: new google.maps.LatLng(-34.397, 150.644),
+  });
+  // We add a DOM event here to show an alert if the DIV containing the
+  // map is clicked.
+  map.addListener("click", (e) => {
+      console.log(e);
+      geocoder = new google.maps.Geocoder();
+      
+      const latlng = {
+        lat: parseFloat(e.latLng.lat()),
+        lng: parseFloat(e.latLng.lng()),
+      };
+      geocoder.geocode({ location: latlng }, (results, status) => {
 
-console.log("my App")
-
+        console.log(address, results[0].formatted_address, status, results);
+        if (status === "OK") {
+          if (results[0]) {
+            address.value= results[0].formatted_address;
+            marker = new google.maps.Marker({
+              position: latlng,
+              map: map,
+              icon: "images/adress.jpg"
+            });
+          }
+          else {
+            window.alert("No results found");
+          }
+        } else {
+          window.alert("Geocoder failed due to: " + status);
+        }
+      });
+  });
+}
