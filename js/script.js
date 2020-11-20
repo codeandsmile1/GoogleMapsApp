@@ -120,11 +120,10 @@ function validateAddress(address) {
 
 form.addEventListener("submit", submitForm);
 
-function initMap() {
-  const mapDiv = document.getElementById("map");
-  const map = new google.maps.Map(mapDiv, {
+function initMap() { 
+  const map = new google.maps.Map(mapId, {
     zoom: 8,
-    center: new google.maps.LatLng(42.698334, 23.319941),
+    center: new google.maps.LatLng(42.698334, 23.319941)
   });
 
   map.addListener("click", (e) => {
