@@ -25,6 +25,13 @@ function submitForm(e) {
   validateWebsite(website);
   validateAddress(address);
   saveDataInLocalStorage();
+  clearForm();
+}
+
+function clearForm() {
+   if(isFormValid) {
+   form.reset();
+   }
 }
 
 function saveDataInLocalStorage() {
