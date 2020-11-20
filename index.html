@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Google Maps App</title>
@@ -11,43 +10,64 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAMFYO3EJhgSvbaVAj6VfuWZnt0GKLcBR0&callback=initMap&libraries=&v=weekly"
       defer
     ></script>
-    <link rel="stylesheet" type="text/css" media="screen" href="css/styles.css" />
-</head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="css/styles.css"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <header>
-            <h1>Google Map App</h1>
-        </header>
-        <form id="form">
-            <div class="list-fields">
-                <div class="form-row">
-                    <input type="text" id="name" name="name" placeholder="Name.." autofocus>
-                    <p class="error-name"></p>
-                </div>
-                <div class="form-row">
-                    <input type="text" id="address" name="address" placeholder="Address..">
-                    <p class="error-address"></p>
-                </div>
-                <div class="form-row">
-                    <input type="text" id="email" name="email" placeholder="Email..">
-                    <p class="error-email"></p>
-                </div>
-                <div class="form-row">
-                    <input type="text" id="phone" name="phone" placeholder="Phone..">
-                    <p class="error-phone"></p>
-                </div>
-                <div class="form-row">
-                    <input type="text" id="website" name="website" placeholder="Website..">
-                    <p class="error-website"></p>
-                </div>
-                <button id="btn" type="submit">Submit</button>
-                <p class="submit-message"></p>
-            </div>
-        </form>   
-        <div id="map"></div>    
+      <header>
+        <h1>Google Map App</h1>
+      </header>
+      <form id="form">
+        <div class="list-fields">
+          <div class="form-row">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Name.."
+              autofocus
+            />
+            <p class="error-name"></p>
+          </div>
+          <div class="form-row">
+            <input
+              type="text"
+              id="address"
+              name="address"
+              placeholder="Address.."
+            />
+            <p class="error-address"></p>
+          </div>
+          <div class="form-row">
+            <input type="text" id="email" name="email" placeholder="Email.." />
+            <p class="error-email"></p>
+          </div>
+          <div class="form-row">
+            <input type="text" id="phone" name="phone" placeholder="Phone.." />
+            <p class="error-phone"></p>
+          </div>
+          <div class="form-row">
+            <input
+              type="text"
+              id="website"
+              name="website"
+              placeholder="Website.."
+            />
+            <p class="error-website"></p>
+          </div>
+          <button id="btn" type="submit">Submit</button>
+          <p class="submit-message"></p>
+        </div>
+      </form>
+      <div id="map"></div>
     </div>
-    
+
     <script src="js/script.js"></script>
-</body>
+  </body>
 </html>

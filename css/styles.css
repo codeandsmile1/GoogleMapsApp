@@ -10,7 +10,7 @@ body {
   height: 100vh;
 }
 
-h1 {
+.container h1 {
  background: #43D1AF;
 	padding: 20px 0;
 	font-size: 140%;
@@ -19,25 +19,25 @@ h1 {
 	color: #fff;
 }
 
-.list-fields {
+.container .list-fields {
   text-align: center;
 }
 
-form {
+.container form {
     width: 500px;
     margin: 0 auto;
 }
 
-.list-fields .form-row {
+.container .list-fields .form-row {
   box-sizing: border-box;
   padding: 5px;
 }
 
-p {
+.container p {
   color: red;
 }
 
-input[type="text"] {
+.container .list-fields .form-row input[type="text"] {
   display: block;
   box-sizing: border-box;
   margin: auto;
@@ -54,14 +54,14 @@ input[type="text"] {
   transition: 0.2s ease;
 }
 
-input[type="text"]:focus
+.container .list-fields .form-row input[type="text"]:focus
 {
   border-bottom: 2px solid #16a085;
-  color: #16a085;
+  color: 5;
   transition: 0.2s ease;
 }
 
-#btn {
+.container .list-fields #btn {
   margin-bottom: 20px;
   width: 150px;
   height: 36px;
@@ -82,10 +82,10 @@ input[type="text"]:focus
   transition: 0.2s ease;
 }
 
-.form-row {
+.container .list-fieleds .form-row {
   text-align: center;
 }
 
-#map {
+.container #map {
     height: 100%;
   }
