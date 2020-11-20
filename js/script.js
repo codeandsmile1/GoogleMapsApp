@@ -7,6 +7,10 @@ const mapId = document.getElementById("map");
 const form = document.getElementById("form");
 let isFormValid = true;
 
+let markers = [];
+
+let listData = [];
+
 let mydata = {
   name: "",
   address: "",
@@ -18,7 +22,7 @@ let mydata = {
 function submitForm(e) {
   e.preventDefault();
   isFormValid = true;
-
+  
   validateName(name);
   validatePhone(phone);
   validateEmail(email);
@@ -26,17 +30,26 @@ function submitForm(e) {
   validateAddress(address);
   saveDataInLocalStorage();
   clearForm();
+  unSetMarker(marker);
 }
 
 function clearForm() {
-   if(isFormValid) {
-   form.reset();
-   }
+  if (isFormValid) {
+    form.reset();
+  }
 }
 
 function saveDataInLocalStorage() {
   if (isFormValid) {
-    localStorage.setItem("data", JSON.stringify(mydata));
+    let localData = JSON.parse(localStorage.getItem("data"));
+
+    if (localData === null) {
+      listData.push(mydata);
+      localStorage.setItem("data", JSON.stringify(listData));
+    } else {
+      localData.push(mydata);
+      localStorage.setItem("data", JSON.stringify(localData));
+    }
   }
 }
 
@@ -82,27 +95,30 @@ function validatePhone(phone) {
 function validateEmail(email) {
   const regexEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   let storedEmail;
+  let storedListData;
 
   if (!regexEmail.test(email.value)) {
     isFormValid = false;
     document.querySelector(".error-email").innerHTML =
       "You have entered an invalid email";
   } else {
-    const retrievedObject = localStorage.getItem("data");
-    let storedObject = JSON.parse(retrievedObject);
 
-    if (storedObject != null && storedObject.hasOwnProperty("email")) {
-      storedEmail = storedObject.email;
-    } else {
-      storedEmail = "";
-    }
-
-    if (storedEmail === email.value) {
-      isFormValid = false;
-      document.querySelector(".submit-message").innerHTML =
-        "Email already submitted";
-    } else {
-      document.querySelector(".error-email").innerHTML = "";
+    if(localStorage.getItem("data") != null) {
+      storedListData = JSON.parse( localStorage.getItem("data"));
+        
+      for (let i = 0; i < storedListData.length; i++) {
+        if(storedListData[i].email == email.value) {
+          isFormValid = false;
+          document.querySelector(".submit-message").innerHTML =
+            "Email already submitted";
+        } else {
+          mydata.email = email.value;
+         document.querySelector(".submit-message").innerHTML = "";
+         }
+        }
+     } else{
+      document.querySelector(".submit-message").innerHTML = "";
+      document.querySelector(".error-email").innerHTML = "";    
       mydata.email = email.value;
     }
   }
@@ -114,25 +130,30 @@ function validateAddress(address) {
     document.querySelector(".error-address").innerHTML =
       "You have entered an invalid address";
   } else {
+    document.querySelector(".error-address").innerHTML = "";
     mydata.address = address.value;
   }
 }
 
 form.addEventListener("submit", submitForm);
 
-function initMap() { 
+let marker = null;
+
+function initMap() {
   const map = new google.maps.Map(mapId, {
     zoom: 8,
-    center: new google.maps.LatLng(42.698334, 23.319941)
+    center: new google.maps.LatLng(42.698334, 23.319941),
   });
-
+ 
   map.addListener("click", (e) => {
     geocoder = new google.maps.Geocoder();
-
+    
     const latlng = {
       lat: parseFloat(e.latLng.lat()),
       lng: parseFloat(e.latLng.lng()),
     };
+
+     unSetMarker(marker);
 
     geocoder.geocode({ location: latlng }, (results, status) => {
       if (status === "OK") {
@@ -143,6 +164,7 @@ function initMap() {
             map: map,
             icon: "images/adress.jpg"
           });
+                   
         } else {
           window.alert("No results found");
         }
@@ -151,4 +173,10 @@ function initMap() {
       }
     });
   });
+}
+
+function unSetMarker(marker) {
+  if(marker != null) {
+    marker.setMap(null);
+    }
 }
